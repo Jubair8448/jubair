@@ -82,7 +82,7 @@ const emailHtml = `<div class="row">
                                         <strong>Email: </strong>${websiteinfo[0].email}<br>
                                         <strong>GSTIN:</strong> 393idkei39ei39993
                                     </td>
-                                    <td width="51%" align="right"><img src="https://demo-ecomus-global.myshopify.com/cdn/shop/files/Ecomus.svg?v=1699583364&width=272" alt="Company Logo" style="width: 150px;"></td>
+                                    <td width="51%" align="right"><img src="https://demo-ecomus-global.myshopify.com/cdn/shop/files/jubair.png?v=1699583364&width=272" alt="Company Logo" style="width: 150px;"></td>
                                 </tr>
                             </tbody>
                         </table>
