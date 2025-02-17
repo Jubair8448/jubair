@@ -1,33 +1,27 @@
-
-const contact = require("../../Models/contactus");
+const Contact = require("../../Models/contactus");
 
 const contactus = async (req, res) => {
-   
-try{
+  try {
+    const { fname, lname, message, emailID, mobile_no } = req.body;
 
-    const {fname,lname,message,emailID,mobile_no} = req.body
-    const sanddata = new contact({
-      firstname : fname,
-      lastname : lname,
-      mobile : mobile_no,
-      email : emailID,
-      Message : message
-    })
+    // Create a new contact entry
+    const contactData = new Contact({
+      firstname: fname,
+      lastname: lname,
+      mobile: mobile_no,
+      email: emailID,
+      message: message,  // Fixed key to match model
+    });
 
-    const rel = await sanddata.save()
-    res.send({status:"sucessful",data:rel})
+    // Save to database
+    const savedContact = await contactData.save();
 
-}catch(err){
-    console.log(`  here is errror ${err}`);
-    res.send({status:"faild"})
+    res.status(201).json({ status: "successful", data: savedContact });
 
-}
+  } catch (err) {
+    console.error("Error saving contact:", err);
+    res.status(500).json({ status: "failed", error: err.message });
+  }
+};
 
-
-
-
-
-
-}
-
-module.exports = contactus
+module.exports = contactus;

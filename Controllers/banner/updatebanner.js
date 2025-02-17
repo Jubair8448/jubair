@@ -3,7 +3,7 @@ const banner = require("../../Models/banner");
 const updatebanner = async (req, res) => { 
 try{
   const { banner_name,banner_link, status, description,banner_alt, banner_type } = req.body;
-  console.log("first bodu of baner",req.body)
+  //console.log("first bodu of baner",req.body)
     let bannerobj = {}
     if(req.files.banner){
       bannerobj = {

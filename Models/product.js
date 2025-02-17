@@ -117,6 +117,12 @@ const productSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+    reviews: [
+      { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Review" 
+      }, // Reference to Review model
+    ],
   },
   { timestamps: true }
 );

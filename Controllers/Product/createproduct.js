@@ -5,7 +5,7 @@ const createproduct = async (req, res) => {
 try{
     const {product_name,product_url,meta_title,meta_keywords,meta_description,featuredproduct,trendingproduct,newarrivedproduct,editor,parent_category,child_category,sort_description,weight_type,weight,stock,mrp_price,selling_price,status,color,brand,size} = req.body
     
-    console.log("first parent category is here",parent_category);
+    //console.log("first parent category is here",parent_category);
     const insertproduct = new product({
       product_name,
       sort_description,

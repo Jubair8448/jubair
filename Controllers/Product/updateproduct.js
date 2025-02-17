@@ -36,7 +36,7 @@ try{
       const imageFieldName = `product_image${i}`;
       if (req.files[imageFieldName]) {
         data[imageFieldName] = req.files[imageFieldName][0].filename;
-        console.log(req.files[imageFieldName][0].filename)
+        //console.log(req.files[imageFieldName][0].filename)
       }
     }
     const updateproduct = await product.findByIdAndUpdate(req.params.id, data, { new: true })

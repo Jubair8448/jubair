@@ -1,29 +1,36 @@
-import express from 'express';
+const express = require("express");
 const router = express.Router();
+const contactus = require("../Controllers/info/contactus"); 
+const Contact = require("../Models/contactus"); // Import Model
 
-// Import the ContactUs model
-import ContactUs from '../Models/contactus.js';
+// ✅ Route for handling contact form submission
+router.post("/", contactus);
 
-// Define the route for getting contact us information
-router.get('/', async (req, res) => {
-  try {
-    const contactUsInfo = await ContactUs.find();
-    res.json(contactUsInfo);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+// ✅ Route to fetch all contacts for admin panel
+router.get("/", async (req, res) => {
+    try {
+        const contacts = await Contact.find(); // Fetch all contacts
+        res.status(200).json({ status: "success", data: contacts });
+    } catch (err) {
+        res.status(500).json({ status: "failed", error: err.message });
+    }
 });
 
-// Define the route for getting contact us information with id 10
-router.get('/10', async (req, res) => {
-  try {
-    const contactUsInfo = await ContactUs.findById(10);
-    res.json(contactUsInfo);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+// ✅ **Add this DELETE route**
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const deletedContact = await Contact.findByIdAndDelete(id);
+        
+        if (!deletedContact) {
+            return res.status(404).json({ status: "failed", message: "Record not found" });
+        }
+
+        res.status(200).json({ status: "success", message: "Record deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ status: "failed", error: error.message });
+    }
 });
 
-// Define other routes as needed
-
-export default router;
+module.exports = router;

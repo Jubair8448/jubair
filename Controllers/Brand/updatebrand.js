@@ -3,7 +3,7 @@ const brand = require("../../Models/brand");
 const updatebrand = async (req, res) => { 
 try{
   const {brand_name,description,status } = req.body
-  console.log("first bodu of baner",req.body)
+  //console.log("first bodu of baner",req.body)
     let brandobj = {}
     if(req.files.brand_image){
       brandobj = {

@@ -77,7 +77,7 @@ const emailHtml = `<div class="row">
                             <tbody>
                                 <tr>
                                     <td width="49%"><strong>Company Name :</strong> ${websiteinfo[0].website_name}<br>
-                                        <strong>Address:</strong> Rz-453T-block Dharampura New Delhi - 110043<br>
+                                        <strong>Address:</strong> D1-block TRONIKA CITY New Delhi - 110043<br>
                                         <strong>Phone no.: </strong>+91${websiteinfo[0].mobile_no}<br>
                                         <strong>Email: </strong>${websiteinfo[0].email}<br>
                                         <strong>GSTIN:</strong> 393idkei39ei39993

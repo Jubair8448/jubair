@@ -1,34 +1,16 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config(); // Load environment variables from .env file
 
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-// Import routes
-import inforouter from './routes/infoRouter.js';
-import userrouter from './routes/userRouter.js';
-import categoryrouter from './routes/categoryRouter.js';
-import attributerouter from './routes/attributeRouter.js';
-import productrouter from './routes/productRouter.js';
-import cartrouter from './routes/cartRouter.js';
-import bannerrouter from './routes/bannerRouter.js';
-import variantrouter from './routes/variantRouter.js';
-import wishlistrouter from './routes/wishlistRouter.js';
-import carousellistrouter from './routes/carousellistRouter.js';
-import brandrouter from './routes/brandRouter.js';
-import addressrouter from './routes/addressRouter.js';
-import orderrouter from './routes/orderRouter.js';
-import contactusrouter from './routes/contactusRouter.js'; // Import the contactus router
-
-// Initialize express app
-const app = express();
-
-// MongoDB connection
+// Import database connection
 import connectdb from './db/connection.js';
+
+// Import Models (for Mongoose schema registration)
 import './Models/contactus.js';
 import './Models/category.js';
 import './Models/attribute.js';
@@ -39,49 +21,97 @@ import './Models/wishlist.js';
 import './Models/brand.js';
 import './Models/address.js';
 import './Models/order.js';
+import './Models/review.js';
 
-// CORS middleware
-app.use(cors());
+// Import Routes
+import contactRouter from './routes/contactusRouter.js';
+import infoRouter from './routes/infoRouter.js';
+import userRouter from './routes/userRouter.js';
+import categoryRouter from './routes/categoryRouter.js';
+import attributeRouter from './routes/attributeRouter.js';
+import productRouter from './routes/productRouter.js';
+import cartRouter from './routes/cartRouter.js';
+import bannerRouter from './routes/bannerRouter.js';
+import variantRouter from './routes/variantRouter.js';
+import wishlistRouter from './routes/wishlistRouter.js';
+import carouselListRouter from './routes/carousellistRouter.js';
+import brandRouter from './routes/brandRouter.js';
+import addressRouter from './routes/addressRouter.js';
+import orderRouter from './routes/orderRouter.js';
+import reviewRouter from './routes/reviewRouter.js';
+ // ✅ Import contactRouter
 
-// Use express.json() middleware (No need for body-parser if using this)
-app.use(express.json());
+// Initialize Express app
+const app = express();
 
-// Get __dirname equivalent in ES modules
+// Middleware
+app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
+app.use(express.json()); // Parse incoming JSON requests
+
+// Get __dirname equivalent in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Set up static files folder
+// Serve static files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB URI (from environment variables)
-const mongoURI = process.env.MONGODB_URI;
-
-// Set strict query to false (recommended for newer versions of Mongoose)
-mongoose.set('strictQuery', false);
+// Validate environment variables
+if (!process.env.MONGODB_URI) {
+  console.error('❌ Error: MONGODB_URI not set in .env file.');
+  process.exit(1);
+}
 
 // Connect to MongoDB
-connectdb(mongoURI);
+const mongoURI = process.env.MONGODB_URI;
+connectdb(mongoURI).then(() => {
+  console.log('✅ Connected to MongoDB');
+}).catch((error) => {
+  console.error('❌ MongoDB Connection Error:', error.message);
+  process.exit(1);
+});
 
-// Routes
-app.use("/api", inforouter);
-app.use("/api/user", userrouter);
-app.use("/api/product", productrouter);
-app.use("/api/category", categoryrouter);
-app.use("/api/attribute", attributerouter);
-app.use("/api/banner", bannerrouter);
-app.use("/api/cart", cartrouter);
-app.use("/api/wishlist", wishlistrouter);
-app.use("/api/variant", variantrouter);
-app.use("/api/list", carousellistrouter);
-app.use("/api/brand", brandrouter);
-app.use("/api/address", addressrouter);
-app.use("/api/order", orderrouter);
-app.use("/api/contactus", contactusrouter); // Use the contactus router
+// API Routes
+app.use('/api/info', infoRouter); // Info routes (including `/api/info/contactus`)
+app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/attribute', attributeRouter);
+app.use('/api/banner', bannerRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/wishlist', wishlistRouter);
+app.use('/api/variant', variantRouter);
+app.use('/api/list', carouselListRouter);
+app.use('/api/brand', brandRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/order', orderRouter);
+app.use('/api/reviews', reviewRouter);
+app.use('/api/contactus', contactRouter); // ✅ Ensure contact route is correctly registered
+app.use('/api/contactus', contactRouter);
+// Default Route for Unmatched Routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found.' });
+});
 
-// Set up server port
-const port = process.env.PORT || 5001;
+// Default Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Server Error:', err.stack);
+  res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+});
 
-// Start the server
+// Start the Server
+const port = process.env.PORT;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`🚀 Server is running on http://localhost:${port}`);
+});
+
+// Handle Uncaught Exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err.message);
+  process.exit(1);
+});
+
+// Handle Unhandled Promise Rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection:', reason);
+  process.exit(1);
 });
