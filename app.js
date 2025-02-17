@@ -1,43 +1,44 @@
-// Import necessary modules
-const dotenv = require("dotenv");
+import dotenv from 'dotenv';
 dotenv.config();
 
-const express = require("express");
-const mongoose = require('mongoose');
-const cors = require("cors");
-const bodyParser = require('body-parser'); // Optional, since Express now supports express.json() natively
-const path = require('path');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 // Import routes
-const inforouter = require("./routes/infoRouter.js");
-const userrouter = require("./routes/userRouter.js");
-const categoryrouter = require("./routes/categoryRouter.js");
-const attributerouter = require("./routes/attributeRouter.js");
-const productrouter = require("./routes/productRouter.js");
-const cartrouter = require("./routes/cartRouter.js");
-const bannerrouter = require("./routes/bannerRouter.js");
-const variantrouter = require("./routes/variantRouter.js");
-const wishlistrouter = require("./routes/wishlistRouter.js");
-const carousellistrouter = require("./routes/carousellistRouter.js");
-const brandrouter = require("./routes/brandRouter.js");
-const addressrouter = require("./routes/addressRouter.js");
-const orderrouter = require("./routes/orderRouter.js");
+import inforouter from './routes/infoRouter.js';
+import userrouter from './routes/userRouter.js';
+import categoryrouter from './routes/categoryRouter.js';
+import attributerouter from './routes/attributeRouter.js';
+import productrouter from './routes/productRouter.js';
+import cartrouter from './routes/cartRouter.js';
+import bannerrouter from './routes/bannerRouter.js';
+import variantrouter from './routes/variantRouter.js';
+import wishlistrouter from './routes/wishlistRouter.js';
+import carousellistrouter from './routes/carousellistRouter.js';
+import brandrouter from './routes/brandRouter.js';
+import addressrouter from './routes/addressRouter.js';
+import orderrouter from './routes/orderRouter.js';
+import contactusrouter from './routes/contactusRouter.js'; // Import the contactus router
 
 // Initialize express app
 const app = express();
 
 // MongoDB connection
-const connectdb = require("./db/connection.js");
-require("./Models/contactus");
-require("./Models/category");
-require("./Models/attribute");
-require("./Models/product");
-require("./Models/product_variant");
-require("./Models/usertable");
-require("./Models/wishlist");
-require("./Models/brand");
-require("./Models/address");
-require("./Models/order");
+import connectdb from './db/connection.js';
+import './Models/contactus.js';
+import './Models/category.js';
+import './Models/attribute.js';
+import './Models/product.js';
+import './Models/product_variant.js';
+import './Models/usertable.js';
+import './Models/wishlist.js';
+import './Models/brand.js';
+import './Models/address.js';
+import './Models/order.js';
 
 // CORS middleware
 app.use(cors());
@@ -45,11 +46,15 @@ app.use(cors());
 // Use express.json() middleware (No need for body-parser if using this)
 app.use(express.json());
 
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Set up static files folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB URI (from environment variables)
-const mongoURI = process.env.MONGODB_URI || 
+const mongoURI = process.env.MONGODB_URI;
 
 // Set strict query to false (recommended for newer versions of Mongoose)
 mongoose.set('strictQuery', false);
@@ -71,6 +76,7 @@ app.use("/api/list", carousellistrouter);
 app.use("/api/brand", brandrouter);
 app.use("/api/address", addressrouter);
 app.use("/api/order", orderrouter);
+app.use("/api/contactus", contactusrouter); // Use the contactus router
 
 // Set up server port
 const port = process.env.PORT || 5001;

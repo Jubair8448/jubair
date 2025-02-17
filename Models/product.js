@@ -32,17 +32,14 @@ const productSchema = mongoose.Schema(
     },
     brand: {
       type: String,
-      // required: true,
       default: null,
     },
     size: {
       type: String,
-      // required: true,
       default: null,
     },
     color: {
       type: String,
-      // required: true,
       default: null,
     },
     parent_category: {
@@ -75,12 +72,10 @@ const productSchema = mongoose.Schema(
     },
     skucode: {
       type: String,
-      // required: true,
       default: null,
     },
     status: {
       type: String,
-      // required: true,
       default: "Active",
     },
     newarrivedproduct: {
@@ -97,12 +92,10 @@ const productSchema = mongoose.Schema(
     },
     weight: {
       type: Number,
-      required: false,
       default: 0,
     },
     weight_type: {
       type: String,
-      required: false,
       default: "ml",
     },
     mrp_price: {
@@ -120,8 +113,10 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    dynamicAttributes: {  type: Array,
-      default: [], },
+    dynamicAttributes: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
